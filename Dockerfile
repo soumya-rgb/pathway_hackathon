@@ -25,6 +25,8 @@ CMD [ "python", "./main.py" ]
 # docker run -it -v ${PWD}:/app -p 8008:8000 my-pathway-app sh
 
 
+# docker run -it --rm -v %cd%:/app -p 8008:8000 my-pathway-app
+
 # docker build -t my-pathway-app .
 
 # docker run -it --rm -v ${PWD}:/app -p 8008:8000 my-pathway-app
