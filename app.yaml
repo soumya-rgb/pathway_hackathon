@@ -17,6 +17,8 @@ $sources:
     with_metadata: true
 
   # Uncomment to use the SharePoint connector
+  # To Create SharePoint credentials, refers to: https://pathway.com/developers/api-docs/pathway-xpacks-sharepoint/#pathway.xpacks.connectors.sharepoint.read
+  # For More details on the configuration, refer to: https://pathway.com/developers/user-guide/connect/pathway-connectors
   # - !pw.xpacks.connectors.sharepoint.read 
   #   url: $SHAREPOINT_URL
   #   tenant: $SHAREPOINT_TENANT
@@ -28,6 +30,8 @@ $sources:
   #   refresh_interval: 30
 
   # Uncomment to use the Google Drive connector
+  # TO Create Google Drive credentials, refers to: https://pathway.com/developers/user-guide/connect/connectors/gdrive-connector/
+  # For More details on the configuration, refer to: https://pathway.com/developers/user-guide/connect/pathway-connectors
   # - !pw.io.gdrive.read
   #   object_id: $DRIVE_ID
   #   service_user_credentials_file: gdrive_indexer.json
