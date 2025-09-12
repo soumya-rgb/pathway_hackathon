@@ -17,8 +17,6 @@ $sources:
     with_metadata: true
 
   # Uncomment to use the SharePoint connector
-  # To Create SharePoint credentials, refers to: https://pathway.com/developers/api-docs/pathway-xpacks-sharepoint/#pathway.xpacks.connectors.sharepoint.read
-  # For More details on the configuration, refer to: https://pathway.com/developers/user-guide/connect/pathway-connectors
   # - !pw.xpacks.connectors.sharepoint.read 
   #   url: $SHAREPOINT_URL
   #   tenant: $SHAREPOINT_TENANT
@@ -30,8 +28,6 @@ $sources:
   #   refresh_interval: 30
 
   # Uncomment to use the Google Drive connector
-  # TO Create Google Drive credentials, refers to: https://pathway.com/developers/user-guide/connect/connectors/gdrive-connector/
-  # For More details on the configuration, refer to: https://pathway.com/developers/user-guide/connect/pathway-connectors
   # - !pw.io.gdrive.read
   #   object_id: $DRIVE_ID
   #   service_user_credentials_file: gdrive_indexer.json
@@ -88,10 +84,17 @@ $parser: !pw.xpacks.llm.parsers.DoclingParser
   cache_strategy: !pw.udfs.DefaultCache {}
 
 # Sets up the retriever factory for indexing and retrieving documents.
-$retriever_factory: !pw.stdlib.indexing.BruteForceKnnFactory
-  reserved_space: 1000
-  embedder: $embedder
-  metric: !pw.stdlib.indexing.BruteForceKnnMetricKind.COS
+$retriever_factories:
+  - !pw.stdlib.indexing.BruteForceKnnFactory
+    reserved_space: 1000
+    embedder: $embedder
+    metric: !pw.stdlib.indexing.BruteForceKnnMetricKind.COS
+  - !pw.stdlib.indexing.TantivyBM25Factory
+    ram_budget: 1073741824
+    in_memory_index: True
+
+$retriever_factory: !pw.stdlib.indexing.HybridIndexFactory
+  retriever_factories: $retriever_factories
 
 # Manages the storage and retrieval of documents for the RAG template.
 $document_store: !pw.xpacks.llm.document_store.DocumentStore
