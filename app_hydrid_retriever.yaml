@@ -84,10 +84,17 @@ $parser: !pw.xpacks.llm.parsers.DoclingParser
   cache_strategy: !pw.udfs.DefaultCache {}
 
 # Sets up the retriever factory for indexing and retrieving documents.
-$retriever_factory: !pw.stdlib.indexing.BruteForceKnnFactory
-  reserved_space: 1000
-  embedder: $embedder
-  metric: !pw.stdlib.indexing.BruteForceKnnMetricKind.COS
+$retriever_factories:
+  - !pw.stdlib.indexing.BruteForceKnnFactory
+    reserved_space: 1000
+    embedder: $embedder
+    metric: !pw.stdlib.indexing.BruteForceKnnMetricKind.COS
+  - !pw.stdlib.indexing.TantivyBM25Factory
+    ram_budget: 1073741824
+    in_memory_index: True
+
+$retriever_factory: !pw.stdlib.indexing.HybridIndexFactory
+  retriever_factories: $retriever_factories
 
 # Manages the storage and retrieval of documents for the RAG template.
 $document_store: !pw.xpacks.llm.document_store.DocumentStore
