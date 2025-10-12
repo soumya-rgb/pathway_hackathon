@@ -17,8 +17,8 @@ class Doc:
             f"student_mastery_{STUDENT_ID}": 0.5,
         }
 
-# one example document (replace with real topic later)
-demo_doc = Doc("13.01__Prelude_to__Electromagnetic_Induction.pdf", "electromagnetism")
+'''# one example document (replace with real topic later)
+demo_doc = Doc("Electromagntic induction", "electromagnetism")'''
 
 def adapt_difficulty(student_id, doc, correct):
     mastery = doc.metadata.get(f"student_mastery_{student_id}", 0.5)
@@ -30,7 +30,7 @@ def adapt_difficulty(student_id, doc, correct):
 # -----------------------------
 # RAG QUERY FUNCTION
 # -----------------------------
-def ask_query(prompt, topic, difficulty):
+'''def ask_query(prompt, topic, difficulty):
     """
     Sends a query to the Adaptive RAG backend and returns the model answer + any retrieved sources.
     """
@@ -58,6 +58,45 @@ def ask_query(prompt, topic, difficulty):
                         sources.append(fname)
         src_text = ", ".join(sources) if sources else "No sources found."
         return answer, src_text
+    except Exception as e:
+        return f"❌ Error contacting RAG: {e}", ""
+'''
+def ask_query(prompt, topic, difficulty):
+    """
+    Sends a query to the Adaptive RAG backend and returns the model answer + any retrieved sources.
+    Also creates a dynamic doc based on the topic.
+    """
+    # Decide filename based on topic (or just keep topic as filename)
+    filename = f"{topic.title()} Lesson" if topic else "General Lesson"
+    
+    # Create a dynamic document
+    global demo_doc
+    demo_doc = Doc(filename, topic or "general")  # fallback to "general"
+
+    # Filters for RAG
+    filters = {"topic": demo_doc.metadata["topic"], "content_type": "lesson"}
+    if difficulty.lower() != "any":
+        filters["difficulty"] = difficulty.lower()
+
+    payload = {"prompt": prompt, "filters_flat": filters}
+
+    try:
+        resp = requests.post(RAG_ENDPOINT, json=payload, timeout=20)
+        resp.raise_for_status()
+        data = resp.json()
+        answer = data.get("answer") or data.get("response") or "No response text returned."
+
+        sources = []
+        for key in ("sources", "docs", "retrieved_documents", "context"):
+            if key in data and isinstance(data[key], list):
+                for d in data[key]:
+                    fname = d.get("filename") or d.get("doc_id") or d.get("source")
+                    if fname:
+                        sources.append(fname)
+        src_text = ", ".join(sources) if sources else "No sources found."
+
+        return answer, src_text
+
     except Exception as e:
         return f"❌ Error contacting RAG: {e}", ""
 
@@ -91,17 +130,7 @@ with gr.Blocks(title="Adaptive RAG Learning Portal") as demo:
     gr.Markdown("Ask questions, receive lessons, and adjust your mastery interactively.")
 
     with gr.Tab("Ask a Question"):
-        '''with gr.Row():
-            with gr.Column(scale=2):
-                prompt = gr.Textbox(label="Your Question", value="Explain electromagnetic induction", lines=3)
-                topic = gr.Textbox(label="Topic", value="electromagnetism")
-                difficulty = gr.Dropdown(choices=["any","easy","medium","hard"], value="any", label="Difficulty filter")
-                ask_btn = gr.Button("Ask RAG System")
-            with gr.Column(scale=2):
-                answer_box = gr.Textbox(label="RAG Response", lines=10)
-                sources_box = gr.Textbox(label="Sources", lines=3)
-        ask_btn.click(fn=ask_query, inputs=[prompt, topic, difficulty], outputs=[answer_box, sources_box])
-        '''
+        
         with gr.Row():
             # Input column
             with gr.Column(scale=2):

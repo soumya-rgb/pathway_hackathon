@@ -19,8 +19,8 @@ $sources:
       code: |
         def process(doc):
             # Assign topic based on folder or filename
-            #doc.metadata["topic"] = doc.metadata.get("folder", "general")
-            doc.metadata["topic"] = "electromagnetism"
+            doc.metadata["topic"] = doc.metadata.get("folder", "general")
+            #doc.metadata["topic"] = "electromagnetism"
             # Content type: lesson or quiz
             if "quiz" in doc.metadata.get("filename", "").lower():
                 doc.metadata["content_type"] = "quiz"
