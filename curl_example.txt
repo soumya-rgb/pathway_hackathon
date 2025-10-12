@@ -1,6 +1,10 @@
-curl --location 'http://localhost:8000/v2/answer' \
---header 'accept: */*' \
---header 'Content-Type: application/json' \
---data '{
-    "prompt": "Give me highlights of Q3 Financial Summay"
-}'
+curl -X POST "http://localhost:8008/v2/answer" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt": "Give prelude to electromagnetic induction",
+    "filters_flat": {
+      "topic": "electromagnetism",
+      "content_type": "lesson",
+      "student_mastery_student_1": {"$lt": 0.7}
+    }
+  }'

@@ -12,9 +12,41 @@
 $sources:
   # File System connector, reading data locally.
   - !pw.io.fs.read
-    path: data
+    path: data/Q5
     format: binary
     with_metadata: true
+    post_processor: !pw.udfs.PythonLambda
+      code: |
+        def process(doc):
+            # Assign topic based on folder or filename
+            #doc.metadata["topic"] = doc.metadata.get("folder", "general")
+            doc.metadata["topic"] = "electromagnetism"
+            # Content type: lesson or quiz
+            if "quiz" in doc.metadata.get("filename", "").lower():
+                doc.metadata["content_type"] = "quiz"
+            else:
+                doc.metadata["content_type"] = "lesson"
+            
+            # Difficulty assignment based on filename
+            fname = doc.metadata.get("filename", "").lower()
+            if "easy" in fname:
+                doc.metadata["difficulty"] = "easy"
+            elif "medium" in fname:
+                doc.metadata["difficulty"] = "medium"
+            elif "hard" in fname:
+                doc.metadata["difficulty"] = "hard"
+            else:
+                doc.metadata["difficulty"] = "medium"  # default
+            
+            '''doc.metadata["student_mastery"] = {
+                "student_1": 0.5,
+                "student_2": 0.8
+            }'''
+            doc.metadata["student_mastery_student_1"] = 0.5
+            doc.metadata["student_mastery_student_2"] = 0.8
+            
+            print("Indexed document metadata:", doc.metadata)  #prints the metadat of doc
+            return doc
 
   # Uncomment to use the SharePoint connector
   # To Create SharePoint credentials, refers to: https://pathway.com/developers/api-docs/pathway-xpacks-sharepoint/#pathway.xpacks.connectors.sharepoint.read
