@@ -1,141 +1,32 @@
-# Pathway Hackathon: Adaptive RAG Template
+LearnPro
 
-This repository provides a ready-to-use Adaptive Retrieval-Augmented Generation (RAG) template using [Pathway](https://pathway.com/). It enables you to build, configure, and run a document-based question-answering system with support for both Gemini and OpenAI models.
+Our RAG agent retrieves the answers for a query from the provided learning material based on the progress of the student. It uses [Pathway](https://pathway.com/) and the document-based question-answering system is supported by Gemini. The frontend is achieved using gradio.
 
----
+Architecture of the pipeline
+![Architecture](<The data is loaded from the files loaded in Q5 folder in data..png>)
 
-## Table of Contents
+You can ask a query from the given data source and you will get a context specific and relevant response generated from the data provided.
+Suppose you have a want to ask a doubt on electomagnetism.
 
-- [Features](#features)
-- [Installation](#installation)
-  - [Linux](#linux)
-  - [Windows](#windows)
-- [Environment Variables (`.env`)](#environment-variables-env)
-- [YAML Configuration](#yaml-configuration)
-- [Running the Application](#running-the-application)
-- [Making Requests (cURL Example)](#making-requests-curl-example)
-- [References](#references)
+RAG Query Input
+![RAG Query Input](<rag query input.png>)
 
----
+RAG Query Output
+![RAG Query Output](<rag query output.png>)
 
-## Features
+There is another feature that allows the user to update the mastery(progress) of a student after a quiz. 
+Suppose the student gave incorrect answers in the quiz.
 
-- **Document Ingestion:** Reads and indexes documents from the `data/` folder.
-- **Flexible LLM Support:** Works with Gemini and OpenAI models.
-- **Configurable via YAML:** Easily adjust data sources, models, embedders, and more.
-- **REST API:** Exposes endpoints for question answering.
-- **Caching:** Supports disk and memory caching for efficiency.
+Mastery Update Input
+![Mastery is 0.6](<mastery update input.png>)
 
----
+Mastery Update Output
+![Mastery is reduced to 0.55](<mastery update output.png>)
 
-## Installation
-
-**For detailed step-by-step instructions, refer to the "Day 1 GenAI Hackathon IIT Jodhpur.pdf.pdf" in this repository.**
-
-### Linux
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/AISocietyIITJ/pathway_hackathon.git
-cd pathway_hackathon
-
-# 2. Create a virtual environment using uv (recommended for speed and reproducibility)
-uv venv venv --python 3.10
-source venv/bin/activate
-
-# 3. Install all dependencies (including Pathway and extras)
-uv pip install "pathway[all]"
-```
-
-### Windows
-
-```powershell
-# 1. Clone the repository
-git clone https://github.com/AISocietyIITJ/pathway_hackathon.git
-cd pathway_hackathon
-
-# 2. Build the Docker image
-docker build -t my-pathway-app .
-
-# 3. Run the container (maps your current directory to /app in the container)
-docker run -it --rm -v %cd%:/app -p 8008:8000 my-pathway-app
-```
-
----
-
-## Environment Variables (`.env`)
-
-Create a `.env` file in the root directory with the following structure:
-
-```env
-# For Gemini (Google) API
-GEMINI_API_KEY="your-gemini-api-key"
-
-# For OpenAI API (if using OpenAI models)
-OPENAI_API_KEY="your-openai-api-key"
-```
-
-- Get your Gemini API key from [Google Cloud Console](https://console.cloud.google.com/).
-- Get your OpenAI API key from [OpenAI](https://platform.openai.com/account/api-keys).
-
----
-
-## YAML Configuration
-
-The application is configured using YAML files (`app.yaml` or `app_hydrid_retriever.yaml`). These files define:
-
-- **Data Sources:** Where your documents are loaded from (e.g., local `data/` folder).
-- **LLM Model:** Which language model to use (Gemini, OpenAI, etc.).
-- **Embedder:** For text embeddings (GeminiEmbedder, OpenAIEmbedder).
-- **Splitter & Parser:** How documents are chunked and parsed.
-- **Retriever:** How documents are indexed and retrieved (BruteForce, Hybrid, etc.).
-- **Server Settings:** Host, port, caching, and error handling.
-
-**To modify the pipeline, edit the relevant YAML file.**  
-For more details, see comments in `app.yaml` and [Pathway YAML documentation](https://pathway.com/developers/templates/configure-yaml).
-
----
-
-## Running the Application
-
-Make sure your `.env` and YAML files are set up.
-
-```bash
-# Run the main application
-python main.py
-```
-
-- By default, the server will start at `http://0.0.0.0:8000`.
-- You can change the host and port in the YAML file.
-
----
-
-## Making Requests (cURL Example)
-
-To query the API, use the following cURL command:
-
-```bash
-curl --location 'http://localhost:8000/v2/answer' \
-  --header 'accept: */*' \
-  --header 'Content-Type: application/json' \
-  --data '{
-    "prompt": "Give me highlights of Q3 Financial Summay"
-}'
-```
-
-- Add your query in `'prompt'` field
-- The server will return a JSON response with the answer.
-
----
-
-## References
-
-- [Pathway Documentation](https://pathway.com/developers/)
-- [YAML Configuration Guide](https://pathway.com/developers/templates/configure-yaml)
-- [Day 1 GenAI Hackathon IIT Jodhpur.pdf.pdf](./Day%201%20GenAI%20Hackathon%20IIT%20Jodhpur.pdf.pdf) (for detailed setup)
-
----
-
-**Happy Hacking!**
-
----
+Steps to run the program
+1. Open a cmd terminal and keep docker engine running behind. Build a docker image in the directory of the project with the name my-pathway-app. The command is
+docker build -t my-pathway-app . 
+2. Run a container and mount it on /app and the data folder stored in /app. For example, docker run -it --rm -v %cd%:/app -v %cd%\data:/app/data -p 8008:8000 my-pathway-app.
+3. Install gradio and requests from pip to run the frontend.
+3. Open another cmd terminal and enter the directory where the project folder exists.
+4. Give the command python frontend.py and type http://localhost:7860 on your web browser to access it.

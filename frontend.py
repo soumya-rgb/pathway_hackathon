@@ -125,7 +125,7 @@ def update_mastery(choice):
 # -----------------------------
 # GRADIO UI
 # -----------------------------
-with gr.Blocks(title="Adaptive RAG Learning Portal") as demo:
+with gr.Blocks(title="LearnPro") as demo:
     gr.Markdown("# 🎓 Adaptive RAG Learning Portal")
     gr.Markdown("Ask questions, receive lessons, and adjust your mastery interactively.")
 
