@@ -5,12 +5,6 @@ from dotenv import load_dotenv
 from pathway.xpacks.llm.question_answering import AdaptiveRAGQuestionAnswerer
 from pathway.xpacks.llm.servers import QASummaryRestServer
 from pydantic import BaseModel, ConfigDict, InstanceOf
-#from pathway import Client
-
-# To use advanced features with Pathway Scale, get your free license key from
-# https://pathway.com/features and paste it below.
-# To use Pathway Community, comment out the line below.
-# pw.set_license_key("demo-license-key-with-telemetry")
 
 logging.basicConfig(
     level=logging.INFO,

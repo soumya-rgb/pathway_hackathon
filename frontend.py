@@ -30,37 +30,7 @@ def adapt_difficulty(student_id, doc, correct):
 # -----------------------------
 # RAG QUERY FUNCTION
 # -----------------------------
-'''def ask_query(prompt, topic, difficulty):
-    """
-    Sends a query to the Adaptive RAG backend and returns the model answer + any retrieved sources.
-    """
-    filters = {"topic": topic, "content_type": "lesson"}
-    if difficulty.lower() != "any":
-        filters["difficulty"] = difficulty.lower()
 
-    payload = {
-        "prompt": prompt,
-        "filters_flat": filters  # use filters_flat to avoid flattening errors
-    }
-
-    try:
-        resp = requests.post(RAG_ENDPOINT, json=payload, timeout=20)
-        resp.raise_for_status()
-        data = resp.json()
-        answer = data.get("answer") or data.get("response") or "No response text returned."
-        # extract filenames or context if available
-        sources = []
-        for key in ("sources", "docs", "retrieved_documents", "context"):
-            if key in data and isinstance(data[key], list):
-                for d in data[key]:
-                    fname = d.get("filename") or d.get("doc_id") or d.get("source")
-                    if fname:
-                        sources.append(fname)
-        src_text = ", ".join(sources) if sources else "No sources found."
-        return answer, src_text
-    except Exception as e:
-        return f"❌ Error contacting RAG: {e}", ""
-'''
 def ask_query(prompt, topic, difficulty):
     """
     Sends a query to the Adaptive RAG backend and returns the model answer + any retrieved sources.
