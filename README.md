@@ -1,6 +1,6 @@
 LearnPro
 
-Our RAG agent retrieves the answers for a query from the provided learning material based on the progress of the student. It uses [Pathway](https://pathway.com/) and the document-based question-answering system is supported by Gemini. The frontend is achieved using gradio.
+Our RAG agent retrieves the answers for a query from the provided learning material based on the progress of the student. It uses Pathway and the document-based question-answering system is supported by Gemini. The frontend is achieved using gradio.
 
 Architecture of the pipeline
 ![Architecture](<The data is loaded from the files loaded in Q5 folder in data..png>)
